@@ -1,0 +1,93 @@
+@import './configs.scss';
+
+@font-face {
+    font-family: $fontRegular;
+    src: url('../fonts/BiennaleRegular.otf');
+}
+
+@font-face {
+    font-family: $fontBold;
+    src: url('../fonts/BiennaleBold.otf') format('opentype');
+}
+
+@font-face {
+    font-family: $fontLight;
+    src: url('../fonts/BiennaleLight.otf') format('opentype');
+}
+
+* {
+    font-family: $fontRegular;
+    font-size: 14px;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+#app {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    padding: 0px;
+}
+
+.avatar {
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+        border-radius: 50%;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: cover;
+    }
+}
+
+.oculto {
+    display: none !important;
+}
+
+input {
+    font-size: 16px;
+    letter-spacing: 0.01em;
+    color: $primaryColor;
+    border-radius: 0px;
+    border: none;
+    outline: none;
+
+    &:focus {
+        border-color: $primaryColor;
+    }
+
+    &::placeholder {
+        /* chrome, opera, safari e firefox */
+        color: $greyColor2;
+        opacity: 1;
+    }
+
+    &:-ms-input-placeholder {
+        /*ie 10-11*/
+        color: $greyColor2;
+    }
+
+    &::-ms-input-placeholder {
+        color: $greyColor2;
+    }
+}
+
+body {
+    @media screen and (min-width: $desktopBreakpoint) {
+        background-color: $primaryColorWithOpacity;
+        background-image: url('../images/background.svg');
+    }
+}
