@@ -8,10 +8,9 @@
 </script>
 
 <template>
-    <div class="container-header">
-        <img src="../../assets/images/logo.svg" alt="Logo Devameet" class="logo">
+    <div class="container-footer">
         <NavigationVue />
     </div>
 </template>
 
-<style src="@/assets/styles/header.scss" lang="scss"></style>
+<style src="@/assets/styles/footer.scss" lang="scss"></style>
