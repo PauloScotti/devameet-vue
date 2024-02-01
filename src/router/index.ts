@@ -3,6 +3,7 @@ import LoginVueVue from '@/views/LoginVue.vue'
 import RegisterViewVue from '@/views/RegisterView.vue'
 import HomeViewVue from '@/views/HomeView.vue'
 import { useAccessTokenStore } from '@/stores/accessToken';
+import ProfileViewVue from '@/views/ProfileView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,6 +12,12 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeViewVue,
+      meta: {rotaPrivada: true}
+    },
+    {
+      path: '/user',
+      name: 'user',
+      component: ProfileViewVue,
       meta: {rotaPrivada: true}
     },
     {
