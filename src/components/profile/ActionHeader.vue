@@ -14,4 +14,4 @@
     </div>
 </template>
 
-<style src="@/assets/styles/footer.scss" lang="scss"></style>
+<style src="@/assets/styles/action-header.scss" lang="scss"></style>

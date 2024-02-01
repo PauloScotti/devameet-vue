@@ -11,7 +11,7 @@
 </script>
 
 <template>
-    <HeaderVue />
+    <HeaderVue :hide="true" />
     <div class="container-profile">
         <ActionHeader />
         <AvatarInput />
@@ -30,4 +30,4 @@
     <FooterVue />
 </template>
 
-<style lang="scss"></style>
+<style src="@/assets/styles/profile.scss" lang="scss"></style>

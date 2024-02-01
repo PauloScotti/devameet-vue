@@ -58,6 +58,7 @@
         <div class="avatar">
             <img :src="avatarImage" :alt="alt" />
         </div>
+        <span>Alterar avatar</span>
         <GDialog v-model="showModal">
             <div class="wrapper">
                 <div class="content">
