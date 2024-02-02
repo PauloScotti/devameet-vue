@@ -1,5 +1,6 @@
 import { useAccessTokenStore } from "@/stores/accessToken";
 import { HttpApiServices } from "./HttpApiServices";
+import router from "@/router";
 
 export class LoginServices extends HttpApiServices{
     async login(body: any) {
@@ -31,5 +32,6 @@ export class LoginServices extends HttpApiServices{
         const store = useAccessTokenStore();
         localStorage.clear();
         store.setToken('');
+        router.push({name: "login"})
     }
 }
