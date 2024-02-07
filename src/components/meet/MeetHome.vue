@@ -1,9 +1,10 @@
 <script lang="ts">
     import { defineComponent } from "vue";
     import MeetUserHeader from "./MeetUserHeader.vue";
+    import MeetListVue from "./MeetList.vue";
     
     export default defineComponent({
-    components: { MeetUserHeader }
+    components: { MeetUserHeader, MeetListVue }
 });
 </script>
 
@@ -11,6 +12,7 @@
     <div class="container-principal">
         <div class="container-meet">
             <MeetUserHeader />
+            <MeetListVue />
         </div>
     </div>
 </template>
