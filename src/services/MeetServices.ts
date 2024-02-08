@@ -7,6 +7,10 @@ export class MeetServices extends HttpApiServices{
     async getMeets() {
         return await this.get(this.baseUrl);
     }
+    
+    async getMeetById(id: string) {
+        return await this.get(this.baseUrl+'/'+id);
+    }
 
     async getObjectsById(id: string) {
         return await this.get(this.baseUrl+'/objects/'+id);
