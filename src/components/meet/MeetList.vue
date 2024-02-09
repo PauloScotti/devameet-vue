@@ -32,6 +32,7 @@ import { GDialog } from "gitart-vue-dialog";
         },
         selectItem(id: string) {
             this.selectedId = id;
+            this.$emit('selectItem', id);
         },
         selectToRemove(id: string){
             this.selectedId = id;

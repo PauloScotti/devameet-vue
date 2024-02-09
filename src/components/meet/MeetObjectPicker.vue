@@ -52,7 +52,7 @@
         </div>
         <div class="objects" v-if="show">
             <div v-for="object in asset?.objects" :key="object"  @click="selectObject(object)" :class="!asset?.selectMultiple && object === selected ? 'selected' : ''">
-                <img :src="getImageFromObject(object)" class="object" :class="asset?.path === 'couchh' || asset?.path === 'wall' ? 'large' : ''" />
+                <img :src="getImageFromObject(object)" class="object" :class="asset?.path === 'couch' || asset?.path === 'wall' ? 'large' : ''" />
                 <img class="add" src="../../assets/images/edit_add.svg" v-if="asset?.selectMultiple" />
             </div>
         </div>
