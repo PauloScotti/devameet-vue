@@ -30,6 +30,7 @@
                 x: this.asset?.defaultXPosition,
                 y: this.asset?.defaultYPosition,
                 zIndex: this.asset?.defaultZIndex,
+                orientation: this.asset?.canRotate ? 'front' : '',
                 type: this.asset?.path,
                 flexStart: this.asset?.flexStart,
                 selectMultiple: this.asset?.selectMultiple,
