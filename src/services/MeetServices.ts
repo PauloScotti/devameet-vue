@@ -24,4 +24,8 @@ export class MeetServices extends HttpApiServices{
         return await this.post(this.baseUrl, body);
     }
 
+    async updateMeet(id: string, body: any) {
+        return await this.put(this.baseUrl + '/' + id, body);
+    }
+
 }

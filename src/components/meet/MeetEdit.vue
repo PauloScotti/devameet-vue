@@ -14,7 +14,7 @@
     import plantsIcon from "../../assets/images/plants.svg";
 
     import objectAssetsJson from '../../assets/objects/objects.json';
-import MeetObjectsRoom from "./MeetObjectsRoom.vue";
+    import MeetObjectsRoom from "./MeetObjectsRoom.vue";
 
     const meetServices = new MeetServices();
     
@@ -41,7 +41,7 @@ import MeetObjectsRoom from "./MeetObjectsRoom.vue";
         components: { MeetAddEditHeaderVue, MeetObjectPicker, MeetObjectsRoom },
         data(){
             return {
-                index: 0,
+                index: 1,
                 id: '' as any,
                 meet: {} as any,
                 objects: [] as any,
@@ -87,17 +87,20 @@ import MeetObjectsRoom from "./MeetObjectsRoom.vue";
             },
             async updateMeet() {
                 try{
-                if(!this.meet.name || !this.meet.name.trim() ||
-                !this.meet.color || !this.meet.color.trim()){
-                    return;
-                }
+                    if(this.meet.name.trim().length < 2 || !this.meet.name.trim() ||
+                    this.meet.color.trim().length < 3 || !this.meet.color.trim()){
+                        return;
+                    }
 
-                await meetServices.addMeet({
-                    name: this.meet.name,
-                    color: this.meet.color,
-                });
-                
-                return router.push('/');
+                    const body = {
+                        name: this.meet.name,
+                        color: this.meet.color,
+                        objects: this.objects,
+                    }
+
+                    await meetServices.updateMeet(this.id, body);
+
+                    router.push('/');
 
                 }catch(e:any) {
                     console.log("Erro ao atualizar reunião", e);
@@ -106,15 +109,99 @@ import MeetObjectsRoom from "./MeetObjectsRoom.vue";
             },
             setObject(object: any) {
                 object._id = this.index++;
-                if(object.selectMultiple) {
+                if(object.selectMultiple === true) {
                     this.objects.push(object);
                 } else {
-                    const filtered = this.objects.filter((o: any) => o.type != object.type);
+                    const filtered = this.objects.filter((o: any) => o.type !== object.type);
                     filtered.push(object);
                     this.objects = filtered;
                 }
 
                 this.selected = object;
+            },
+            selectObject(object: any) {
+                if(this.selected?._id === object._id) {
+                    this.selected = null;
+                } else {
+                    this.selected = object;
+                }
+            },
+            deleteObject(object: any) {
+                if (object?._id) {
+                    const filtered = this.objects.filter((o: any) => o._id !== object._id);
+                    this.objects = filtered
+                }
+            },
+            rotateObject(object: any) {
+                const {selected, to} = object;
+
+                if (selected?._id && (selected?.type === 'chair' || selected?.type === 'couch')) {
+                    const index = this.objects.indexOf(selected);
+
+                    if(to === 'left') {
+                        switch(selected?.orientation) {
+                            case 'back':
+                                selected.orientation = 'left';
+                                break;
+                            case 'left':
+                                selected.orientation = 'front';
+                                break;
+                            case 'front':
+                                selected.orientation = 'right';
+                                break;
+                            case 'right':
+                                selected.orientation = 'back';
+                                break;
+                            default: break;
+                        }
+                    } else {
+                        switch(selected?.orientation) {
+                            case 'back':
+                                selected.orientation = 'right';
+                                break;
+                            case 'left':
+                                selected.orientation = 'back';
+                                break;
+                            case 'front':
+                                selected.orientation = 'left';
+                                break;
+                            case 'right':
+                                selected.orientation = 'front';
+                                break;
+                            default: break;
+                        }
+                    }
+                    
+                    this.selected = selected;
+                    this.objects[index] = selected;
+                }
+            },
+            moveObject(object: any) {
+                const {selected, to} = object;
+                console.log(selected, to)
+
+                if(selected?._id && selected?.type !== 'wall' && selected?.type !== 'floor') {
+                    const index = this.objects.indexOf(selected);
+
+                    switch(to) {
+                        case 'up':
+                            selected.y = selected.y > 0 ? selected.y - 1 : 0;
+                            break;
+                        case 'down':
+                            selected.y = selected.y < 6 ? selected.y + 1 : 6;
+                            break;
+                        case 'left':
+                            selected.x = selected.x > 0 ? selected.x - 1 : 0;
+                            break;
+                        case 'right':
+                            selected.x = selected.x < 6 ? selected.x + 1 : 6;
+                            break;
+                        default: break;
+                    }
+
+                    this.selected = selected;
+                    this.objects[index] = selected;
+                }
             }
         },
         computed: {
@@ -151,7 +238,7 @@ import MeetObjectsRoom from "./MeetObjectsRoom.vue";
                 <button @click="updateMeet" :class="getFormValidClass" :disabled="!isFormValid">Salvar</button>
             </div>
         </div>
-        <MeetObjectsRoom :objects="objects" :selected="selected" />
+        <MeetObjectsRoom :objects="objects" :selected="selected" @selectObject="selectObject" @deleteObject="deleteObject" @rotateObject="rotateObject" @moveObject="moveObject" />
     </div>
 </template>
 

@@ -6,7 +6,35 @@
             objects: Array,
             selected: null as any
         },
+        mounted() {
+            document.addEventListener('keyup', this.moveSelected);
+        },
         methods: {
+            moveSelected(event: any) {
+                if(this.selected?._id) {
+                    let to = '';
+
+                    switch(event.key) {
+                        case 'ArrowUp':
+                            to = 'up'
+                            break;
+                        case 'ArrowDown':
+                            to = 'down'
+                            break;
+                        case 'ArrowLeft':
+                            to = 'left'
+                            break;
+                        case 'ArrowRight':
+                            to = 'right'
+                            break;
+                        default: break;
+                    }
+
+                    if(to) {
+                        this.$emit('moveObject', {to, selected: this.selected});
+                    }
+                }
+            },
             getImageFromObject(object: any) {
                 if (object.name.trim().length > 0) {
                     const path = `../../assets/objects/${object?.type}/${object.name}${object.orientation ? '_' + object.orientation : ''}.png`;
@@ -70,7 +98,7 @@
                     default: break;
                 }
 
-                switch(object.x){
+                switch(object.y){
                     case 0:
                         cl += ' row-zero';
                         break;
@@ -121,16 +149,16 @@
                 <div class="line column five" />
                 <div class="line column six" />
                 <div class="line column seven" />
-                <img v-for="object in objects" :key="object" :class="getObjectClass(object)" :src="getImageFromObject(object)" :style="getObjectStyle(object)">
+                <img v-for="object in objects" :key="object" :class="getObjectClass(object)" :src="getImageFromObject(object)" :style="getObjectStyle(object)" @click="$emit('selectObject', object)">
             </div>
             <div class="actions">
                 <div :class="selected?._id ? 'active' : ''">
-                    <img src="../../assets/images/thrash_white.svg" alt="Deletar objeto" />
+                    <img src="../../assets/images/thrash_white.svg" alt="Deletar objeto" @click="$emit('deleteObject', selected)" />
                 </div>
-                <div :class="selected?._id && (selected?.type === 'chair' || selected?.type === 'couch') ? 'active' : ''">
+                <div :class="selected?._id && (selected?.type === 'chair' || selected?.type === 'couch') ? 'active' : ''" @click="$emit('rotateObject', {selected, to: 'right'})">
                     <img src="../../assets/images/rotate_right.svg" alt="Girar a Direita" />
                     </div>
-                <div :class="selected?._id && (selected?.type === 'chair' || selected?.type === 'couch') ? 'active' : ''">
+                <div :class="selected?._id && (selected?.type === 'chair' || selected?.type === 'couch') ? 'active' : ''" @click="$emit('rotateObject', {selected, to: 'left'})">
                     <img src="../../assets/images/rotate_left.svg" alt="Girar a Esquerda" />
                 </div>
             </div>

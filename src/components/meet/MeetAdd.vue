@@ -78,7 +78,7 @@
                 <button @click="createMeet" :class="getFormValidClass" :disabled="!isFormValid">Salvar</button>
             </div>
         </div>
-        <div class="conteiner-objects">
+        <div class="container-room">
             <div class="grid">
                 <div class="line row one" />
                 <div class="line row two" />
