@@ -8,7 +8,9 @@
             }
         },
         props: {
-            objects: Array
+            objects: Array,
+            connectedUsers: Array,
+            me: null as any
         },
         data() {
             return {
@@ -19,9 +21,10 @@
             
         },
         methods: {
-            getImageFromObject(object: any) {
+            getImageFromObject(object: any, isAvatar: boolean) {
                 if (object.name.trim().length > 0) {
-                    const path = `../../assets/objects/${object?.type}/${object.name}${object.orientation ? '_' + object.orientation : ''}.png`;
+                    const path = `../../assets/objects/${isAvatar ? 'avatar' : object?.type}/${isAvatar ? object.avatar : object.name}${object.orientation ? '_' + object.  orientation : ''}.png`;
+
                     const imageUrl = new URL(path, import.meta.url);
 
                     if(this.mobile) {
@@ -128,6 +131,13 @@
                 }
 
                 return cl;
+            },
+            getName(user: any){
+                if(user?.name) {
+                    return user.name.split(' ')[0];
+                }
+
+                return '';
             }
         }
     });
@@ -136,9 +146,15 @@
 <template>
     <div class="conteiner-objects">
             <div class="grid">
-                <img v-for="object in objects" :key="object" :class="getObjectClass(object)" :src="getImageFromObject(object)" :style="getObjectStyle(object)" @click="$emit('selectObject', object)">
+                <img v-for="object in objects" :key="object" :class="getObjectClass(object)" :src="getImageFromObject(object, false)" :style="getObjectStyle(object)" @click="$emit('selectObject', object)">
+                <div class="user-avatar" v-for="user in connectedUsers" :key="user" :class="getObjectClass(user)">
+                    <div>
+                        <span>{{ getName(user) }}</span>
+                    </div>
+                    <img :src="getImageFromObject(user, true)" :style="getObjectStyle(user)" >
+                </div>
                 
-                <div class="preview">
+                <div class="preview" v-if="!connectedUsers || connectedUsers.length === 0">
                     <img src="../../assets/images/preview.svg" alt="Entrar na sala" />
                     <button @click="$emit('enterRoom')">Entrar na sala</button>
                 </div>
