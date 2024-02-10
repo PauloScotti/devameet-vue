@@ -7,6 +7,7 @@ import ProfileViewVue from '@/views/ProfileView.vue';
 import MeetAddViewVue from '@/views/MeetAddView.vue';
 import MeetEditViewVue from '@/views/MeetEditView.vue';
 import RoomLinkViewVue from '@/views/RoomLinkView.vue';
+import RoomViewVue from '@/views/RoomView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,6 +40,12 @@ const router = createRouter({
       path: '/edit/:id',
       name: 'edit',
       component: MeetEditViewVue,
+      meta: {rotaPrivada: true}
+    },
+    {
+      path: '/room/:link',
+      name: 'room',
+      component: RoomViewVue,
       meta: {rotaPrivada: true}
     },
     {

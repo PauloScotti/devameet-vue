@@ -26,7 +26,7 @@ import { defineComponent } from "vue";
                 router.push('edit/'+this.meet?.id);
             },
             copyLink(){
-                navigator?.clipboard?.writeText(window?.location?.href + 'room/'+this.meet?.link);
+                window.innerWidth <= 992 ? navigator?.clipboard?.writeText(this.meet?.link) : navigator?.clipboard?.writeText(window?.location?.href+this.meet?.link);
             }
         }
     });
