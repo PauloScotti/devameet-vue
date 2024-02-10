@@ -6,6 +6,7 @@ import { useAccessTokenStore } from '@/stores/accessToken';
 import ProfileViewVue from '@/views/ProfileView.vue';
 import MeetAddViewVue from '@/views/MeetAddView.vue';
 import MeetEditViewVue from '@/views/MeetEditView.vue';
+import RoomLinkViewVue from '@/views/RoomLinkView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +27,12 @@ const router = createRouter({
       path: '/add',
       name: 'add',
       component: MeetAddViewVue,
+      meta: {rotaPrivada: true}
+    },
+    {
+      path: '/link',
+      name: 'link',
+      component: RoomLinkViewVue,
       meta: {rotaPrivada: true}
     },
     {
