@@ -178,7 +178,6 @@
             },
             moveObject(object: any) {
                 const {selected, to} = object;
-                console.log(selected, to)
 
                 if(selected?._id && selected?.type !== 'wall' && selected?.type !== 'floor') {
                     const index = this.objects.indexOf(selected);

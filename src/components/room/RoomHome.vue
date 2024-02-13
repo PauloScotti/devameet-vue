@@ -12,7 +12,8 @@
         setup() {
             return {
                 wsServices,
-                userId: localStorage.getItem('id') as string
+                userId: localStorage.getItem('id') as string,
+                mobile: window.innerWidth <= 992
             }
         },
         data() {
@@ -23,7 +24,7 @@
                 objects: [] as any,
                 userMediaStream: null as any,
                 connectedUsers: [] as any,
-                me: {} as any,
+                me: null as any,
                 showModal: false,
             }
         },
@@ -83,9 +84,73 @@
                         this.connectedUsers.filter((u: any) => u.clientId !== socketId);
                         this.wsServices.onRemoveUsersList(socketId);
                     });
+
+                    document.addEventListener('keyup', this.doMovement);
                 } else {
                     this.showModal = true;
                 }
+            },
+            doMovement(event: any) {
+                const user = this.me;
+                if (event && user) {
+                    const payload = {
+                        userId: this.userId,
+                        link: this.link
+                    } as any
+
+                    switch (event.key) {
+                        case 'ArrowUp':
+                            payload.x = user.x;
+                            payload.orientation = 'back';
+                            if (user.orientation === 'back') {
+                                payload.y = user.y > 1 ? user.y - 1 : 1;
+                            } else {
+                                payload.y = user.y
+                            }
+                            break;
+                        case 'ArrowDown':
+                            payload.x = user.x;
+                            payload.orientation = 'front';
+                            if (user.orientation === 'front') {
+                                payload.y = user.y < 7 ? user.y + 1 : 7;
+                            } else {
+                                payload.y = user.y
+                            }
+                            break;
+                        case 'ArrowLeft':
+                            payload.y = user.y;
+                            payload.orientation = 'left';
+                            if (user.orientation === 'left') {
+                                payload.x = user.x > 0 ? user.x - 1 : 0;
+                            } else {
+                                payload.x = user.x
+                            }
+                            break;
+                        case 'ArrowRight':
+                            payload.y = user.y;
+                            payload.orientation = 'right';
+                            if (user.orientation === 'right') {
+                                payload.x = user.x < 7 ? user.x + 1 : 7;
+                            } else {
+                                payload.x = user.x
+                            }
+                            break;
+                        default: break;
+                    }
+
+                    if (payload.x >= 0 && payload.y >= 0 && payload.orientation) {
+                        this.wsServices.updateUserMovement(payload);
+                    }
+                }
+            },
+            togglMute(){
+                const payload = {
+                    userId: this.userId,
+                    link: this.link,
+                    muted: !this.me.muted
+                }
+
+                this.wsServices.updateUserMuted(payload);
             }
         }
     });
@@ -101,10 +166,26 @@
                 </div>
                 <p :style="{ color }">{{ name }}</p>
             </div>
-            <ObjectsRoomVue :objects="objects" v-if="objects && objects.length > 0" @enterRoom="joinRoom" :connectedUsers="connectedUsers" />
+            <ObjectsRoomVue :objects="objects" v-if="objects && objects.length > 0" @enterRoom="joinRoom" :connectedUsers="connectedUsers" :me="me" @togglMute="togglMute" />
             <div class="empty" v-else>
                 <img src="../../assets/images/empty.svg" />
                 <p>Reunião não encontrada</p>
+            </div>
+            <div class="movement" v-if="mobile && me && me.user">
+                <div class="button" @click="doMovement({key: 'ArrowUp'})">
+                    <img src="../../assets/images/key_up.svg" alt="Andar para cima">
+                </div>
+                <div class="line">
+                    <div class="button" @click="doMovement({key: 'ArrowLeft'})">
+                        <img src="../../assets/images/key_left.svg" alt="Andar para esquerda">
+                    </div>
+                    <div class="button" @click="doMovement({key: 'ArrowDown'})">
+                        <img src="../../assets/images/key_down.svg" alt="Andar para baixo">
+                    </div>
+                    <div class="button" @click="doMovement({key: 'ArrowRight'})">
+                        <img src="../../assets/images/key_right.svg" alt="Andar para direita">
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -138,6 +138,13 @@
                 }
 
                 return '';
+            },
+            getMutedClass(user: any) {
+                if(user?.muted) {
+                    return 'muted';
+                }
+
+                return '';
             }
         }
     });
@@ -148,12 +155,13 @@
             <div class="grid">
                 <img v-for="object in objects" :key="object" :class="getObjectClass(object)" :src="getImageFromObject(object, false)" :style="getObjectStyle(object)" @click="$emit('selectObject', object)">
                 <div class="user-avatar" v-for="user in connectedUsers" :key="user" :class="getObjectClass(user)">
-                    <div>
-                        <span>{{ getName(user) }}</span>
+                    <div :class="getMutedClass(user)">
+                        <span :class="getMutedClass(user)">{{ getName(user) }}</span>
                     </div>
                     <img :src="getImageFromObject(user, true)" :style="getObjectStyle(user)" >
                 </div>
-                
+                <img class="audio" src="../../assets/images/audio_on.svg" v-if="me && !me.muted" @click="$emit('togglMute')" />
+                <img class="audio" src="../../assets/images/audio_off.svg" v-if="me && me.muted" @click="$emit('togglMute')" />
                 <div class="preview" v-if="!connectedUsers || connectedUsers.length === 0">
                     <img src="../../assets/images/preview.svg" alt="Entrar na sala" />
                     <button @click="$emit('enterRoom')">Entrar na sala</button>
