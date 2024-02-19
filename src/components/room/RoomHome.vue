@@ -77,6 +77,7 @@
             joinRoom() {
                 if(this.userMediaStream) {
                     this.wsServices.joinRoom(this.link, this.userId);
+                    this.wsServices.onCallMade();
                     this.wsServices.onUpdateUsersList(async (users: any) => {
                         if(users) {
                             this.connectedUsers = users;
@@ -97,6 +98,8 @@
 
                         }
                     });
+
+                    this.wsServices.onAnswerMade((socket: any) => this.wsServices.callUser(socket));
                     
                     this.wsServices.onRemoveUsersList((socketId: any) => {
                         this.connectedUsers.filter((u: any) => u.clientId !== socketId);
