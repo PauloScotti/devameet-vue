@@ -60,6 +60,12 @@
                     },
                     audio: true
                 });
+
+                if(document.getElementById('localVideoRef')) {
+                    const videoRef : any = document.getElementById('localVideoRef');
+                    videoRef.srcObject = this.userMediaStream;
+                }
+
             } catch (e) {
                 console.log('Erro ao obter dados da reunião', e);
             }
@@ -74,16 +80,40 @@
                     this.wsServices.onUpdateUsersList(async (users: any) => {
                         if(users) {
                             this.connectedUsers = users;
-                            const me = users.find((u: any) => u.users = this.userId);
+                            const me = users.find((u: any) => u.users === this.userId);
                             if(me) {
                                 this.me = me;
                             }
+
+                            const usersWithoutMe = users.filter((u: any) => u.user !== this.userId)
+                            for (const user of usersWithoutMe) {
+                                this.wsServices.addPeerConnection(user.clientId, this.userMediaStream, (_stream: any) => {
+                                if (document.getElementById(user.clientId)) {
+                                    const element = document.getElementById(user.clientId) as any;
+                                    element.srcObject = _stream;
+                                }
+                            });
+                        }
+
                         }
                     });
+                    
                     this.wsServices.onRemoveUsersList((socketId: any) => {
                         this.connectedUsers.filter((u: any) => u.clientId !== socketId);
-                        this.wsServices.onRemoveUsersList(socketId);
+                        this.wsServices.removerPeerConnection(socketId);
                     });
+
+                    this.wsServices.onAddUser((user: any) => {
+                    console.log('onAddUser', user);
+                    this.wsServices.addPeerConnection(user, this.userMediaStream, (_stream: any) => {
+                        if (document.getElementById(user)) {
+                            const element = document.getElementById(user) as any;
+                            element.srcObject = _stream;
+                        }
+                    });
+
+                    this.wsServices.callUser(user);
+                });
 
                     document.addEventListener('keyup', this.doMovement);
                 } else {
@@ -152,6 +182,11 @@
 
                 this.wsServices.updateUserMuted(payload);
             }
+        },
+        computed: {
+            usersWithoutMe() {
+                return this.connectedUsers.filter((u: any) => u.user !== this.userId)
+            }   
         }
     });
 </script>
@@ -165,6 +200,8 @@
                     <img src="../../assets/images/copy.svg" />
                 </div>
                 <p :style="{ color }">{{ name }}</p>
+                <audio id="localVideoRef" autoplay playsinline muted />
+                <audio v-for="user in usersWithoutMe" :key="user.clientId" autoplay playsinline :id="user?.clientId" :muted="user?.muted" />
             </div>
             <ObjectsRoomVue :objects="objects" v-if="objects && objects.length > 0" @enterRoom="joinRoom" :connectedUsers="connectedUsers" :me="me" @togglMute="togglMute" />
             <div class="empty" v-else>
