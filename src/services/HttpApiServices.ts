@@ -1,7 +1,8 @@
 import axios, {type AxiosInstance} from "axios";
+import { sessionExpired } from "./session";
 
 export class HttpApiServices{
-    
+
     axios: AxiosInstance;
 
     constructor(){
@@ -17,6 +18,17 @@ export class HttpApiServices{
 
             return config;
         });
+
+        this.axios.interceptors.response.use(
+            (response) => response,
+            (error) => {
+                if (sessionExpired(error?.response?.status, localStorage.getItem('token'))) {
+                    localStorage.clear();
+                    window.location.href = '/';
+                }
+                return Promise.reject(error);
+            }
+        );
     }
 
     post(url: string, data: any){

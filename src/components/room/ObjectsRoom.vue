@@ -153,8 +153,8 @@
 <template>
     <div class="conteiner-objects">
             <div class="grid">
-                <img v-for="object in objects" :key="object" :class="getObjectClass(object)" :src="getImageFromObject(object, false)" :style="getObjectStyle(object)" @click="$emit('selectObject', object)">
-                <div class="user-avatar" v-for="user in connectedUsers" :key="user" :class="getObjectClass(user)">
+                <img v-for="(object, index) in objects" :key="index" :class="getObjectClass(object)" :src="getImageFromObject(object, false)" :style="getObjectStyle(object)" @click="$emit('selectObject', object)">
+                <div class="user-avatar" v-for="(user, index) in connectedUsers" :key="index" :class="getObjectClass(user)">
                     <div :class="getMutedClass(user)">
                         <span :class="getMutedClass(user)">{{ getName(user) }}</span>
                     </div>
