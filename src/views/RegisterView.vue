@@ -67,6 +67,11 @@ import AvatarInput from "@/components/general/AvatarInput.vue";
                     return this.error = "Senha e confirmação precisam ser iguais";
                 }
 
+                // A API exige pelo menos 8 caracteres em senhas novas.
+                if(password.length < 8){
+                    return this.error = "A senha precisa ter pelo menos 8 caracteres";
+                }
+
                 this.loading = true;
 
                 const body = {

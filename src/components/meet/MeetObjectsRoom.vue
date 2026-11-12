@@ -149,7 +149,7 @@
                 <div class="line column five" />
                 <div class="line column six" />
                 <div class="line column seven" />
-                <img v-for="object in objects" :key="object" :class="getObjectClass(object)" :src="getImageFromObject(object)" :style="getObjectStyle(object)" @click="$emit('selectObject', object)">
+                <img v-for="(object, index) in objects" :key="index" :class="getObjectClass(object)" :src="getImageFromObject(object)" :style="getObjectStyle(object)" @click="$emit('selectObject', object)">
             </div>
             <div class="actions">
                 <div :class="selected?._id ? 'active' : ''">
